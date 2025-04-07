@@ -71,3 +71,4 @@ emissions.csv
 backend/emissions.csv
 backend/powermetrics_log.txt
 temp_repo/
+.vercel

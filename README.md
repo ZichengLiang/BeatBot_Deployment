@@ -21,8 +21,23 @@ The application will be available at:
 - Backend: http://localhost:5001
 
 ## Vercel Deployment
-This project supports deployment to Vercel. To deploy:
 
+### Important Note on Size Limitations
+Vercel has a 250MB size limit for serverless functions when unzipped. The Python backend for this project exceeds this limit due to its many dependencies.
+
+### Recommended Deployment Strategy
+For production deployment, we recommend:
+
+1. Deploy only the frontend on Vercel (current configuration)
+2. Deploy the backend separately on a platform that supports larger deployments:
+   - Render
+   - Heroku
+   - Railway
+   - A VPS provider like DigitalOcean or AWS EC2
+
+Once you've deployed the backend, set the API_URL environment variable in your Vercel project to point to your backend URL.
+
+### Frontend-Only Deployment Steps
 1. Make sure you have the Vercel CLI installed:
    ```bash
    npm install -g vercel
@@ -34,18 +49,61 @@ This project supports deployment to Vercel. To deploy:
    ```
 
 3. Set up your environment variables in the Vercel dashboard:
-   - OPENAI_API_KEY
-   - FLASK_ENV (set to "production")
+   - API_URL - URL of your separately deployed backend
 
-4. Run the deployment script:
-   ```bash
-   ./deploy.sh
-   ```
-
-Alternatively, you can deploy manually:
+4. Deploy the frontend:
    ```bash
    vercel --prod
    ```
+
+### Backend Deployment Options
+
+#### Render
+1. Sign up for a Render account
+2. Create a new Web Service
+3. Connect your repository
+4. Set the build command: `cd backend && pip install -r requirements.txt`
+5. Set the start command: `cd backend && python app.py`
+6. Add your environment variables (OPENAI_API_KEY, etc.)
+
+#### Heroku
+1. Install the Heroku CLI
+2. Create a Procfile in your backend directory with: `web: gunicorn app:app`
+3. Add gunicorn to your requirements.txt
+4. Deploy with:
+   ```bash
+   heroku create
+   git push heroku main
+   heroku config:set OPENAI_API_KEY=your_key
+   ```
+
+### Troubleshooting Deployment
+
+#### ESLint Warnings
+The build process is configured to ignore ESLint warnings by setting `CI=false` in the build command. This prevents warnings about unused variables and other issues from causing the build to fail.
+
+If you want to fix these warnings instead of ignoring them:
+- Fix unused variables in MidiRenderer.js and NotationSection.js
+- Add missing dependencies to React hook dependency arrays
+- Fix import styles in api.js
+
+#### Environment Variables
+If you see an error about missing environment variables, make sure to add them directly in the Vercel dashboard:
+1. Go to your project in the Vercel dashboard
+2. Navigate to Settings > Environment Variables
+3. Add the required variables (like OPENAI_API_KEY)
+
+#### Python Environment
+If you encounter an "externally-managed-environment" error, our scripts will handle this by creating a Python virtual environment for the build process. The `build-local.sh` script creates this environment locally before deploying.
+
+### Project Structure for Vercel
+For Vercel deployment, the project follows this structure:
+- `/api` - Contains serverless functions (index.py)
+- `/frontend` - React frontend code
+- `/backend` - Flask backend code
+- `vercel.json` - Main configuration for Vercel deployment
+
+Note: The serverless function in `/api/index.py` imports the Flask app from the backend directory.
 
 ### Environment Setup
 Create a `.env` file based on `.env.example`:
