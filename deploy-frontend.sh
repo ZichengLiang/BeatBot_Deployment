@@ -27,6 +27,12 @@ npm install
 echo "Configuring environment variables..."
 echo "REACT_APP_API_URL=https://beat-bot-deployment.vercel.app" > .env.production.local
 
+# Make sure the Login.js file has the correct redirect URL
+if grep -q "window.location.origin" src/pages/Login.js; then
+    echo "Fixing redirect URL in Login.js..."
+    sed -i '' 's|redirectTo={`${window.location.origin}`}|redirectTo="https://beat-bot-deployment.vercel.app"|g' src/pages/Login.js
+fi
+
 CI=false npm run build
 cd ..
 

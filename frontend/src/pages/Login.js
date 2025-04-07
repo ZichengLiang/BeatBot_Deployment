@@ -75,7 +75,7 @@ const Login = () => {
               }}
               theme={isDarkMode ? 'dark' : 'default'}
               providers={['google']}
-              redirectTo={`${window.location.origin}`}
+              redirectTo="https://beat-bot-deployment.vercel.app"
             />
           </div>
           <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
