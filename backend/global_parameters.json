@@ -1,0 +1,12 @@
+{
+  "style": "<string>",
+  "mood": "<string>",
+  "primary_key": "<string>",  
+  "tempo": "<int>",           
+  "sections":" <int>",
+  "duration_beats": "<int>",    
+  "duration_minutes": "<float>",
+  "time_signature": ["<int>", "<int>"],
+  "instruments": ["<instrument_name>"], 
+  "_comment": "Add more parameters as needed"
+}

@@ -1,0 +1,47 @@
+.midi-viewer {
+  width: 100%;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.piano-roll {
+  position: relative;
+  height: 200px;
+  min-width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.beat-line {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.note-blocks {
+  position: relative;
+  height: 100%;
+  min-width: max-content;
+}
+
+.note-block {
+  position: absolute;
+  border-radius: 2px;
+  opacity: 0.8;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.note-block:hover {
+  transform: scaleY(1.2);
+  opacity: 1;
+} 

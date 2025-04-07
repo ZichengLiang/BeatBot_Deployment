@@ -1,0 +1,90 @@
+.sheet-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  max-height: 750px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin: 2rem 0 2rem auto; /* aligns to the left */
+  margin-left: -11.5rem; /* nudge it from the left edge */
+}
+
+.sheet-page img {
+  display: block;
+  max-width: none;
+  height: auto;
+}
+.sheet-page {
+  max-width: 580px;
+  max-height: 700px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin: 0rem 0 -3rem auto; /* aligns to the left */
+  margin-left: 0rem; /* nudge it from the left edge */
+}
+
+.sheet-label {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  color: #374151;
+}
+
+.audio-controls {
+  margin-top: 30px;
+  width: 90%;           /* Make it slightly wider than default */
+  max-width: 800px;     /* Optional cap to prevent it from stretching too much */
+  margin: 5rem 0 -2rem auto; /* aligns to the left */
+  margin-left: 0rem; /* nudge it from the left edge */
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;      /* Wrap buttons if needed */
+  font-size: 1.1rem;    /* Slightly larger controls */
+}
+
+
+.audio-controls .abcjs-inline-audio {
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  margin: 4rem 0 2rem auto; /* aligns to the left */
+  margin-left: 0rem; /* nudge it from the left edge */
+}
+
+.download-button {
+  flex: 1 1 auto;
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.download-button:hover {
+  background-color: #1b5e20;
+}

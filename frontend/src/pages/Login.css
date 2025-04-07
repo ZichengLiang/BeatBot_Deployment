@@ -1,0 +1,80 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+}
+
+.auth-section {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 420px;
+  transition: all 0.3s ease;
+}
+
+.login-container h1 {
+  margin-bottom: 2rem;
+  color: #333;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  color: #666;
+  text-align: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.divider span {
+  padding: 0 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Dark mode support */
+.dark .login-container {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+}
+
+.dark .auth-section {
+  background: #1e293b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dark .login-container h1 {
+  color: #f7fafc;
+}
+
+.dark h2 {
+  color: #e2e8f0;
+}
+
+.dark .divider::before,
+.dark .divider::after {
+  border-bottom: 1px solid #4a5568;
+}
+
+.dark .divider span {
+  color: #a0aec0;
+} 

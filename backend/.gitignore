@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.venv/
+
+# Environment variables
+.env
+
+# IDE
+.idea/
+.vscode/
+.cursor/
+
+# Logs
+*.log
+
+# Testing
+.coverage
+.pytest_cache/
+
+# Green Computing log
+backend/emissions.csv
+backend/powermetrics_log.txt
+*.abc

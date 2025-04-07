@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 213 100% 52%; /* IBM Blue (#0f62fe) */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar colors */
+    --sidebar-background: 240 20% 13%; /* Dark blue-gray */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 213 100% 52%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 231 48% 58%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 13% 22%;
+    --sidebar-ring: 213 100% 52%;
+  }
+
+  .dark {
+    --background: 240 20% 10%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 21% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 21% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 213 100% 52%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 19% 22%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 19% 20%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 240 19% 22%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 13% 25%;
+    --input: 240 13% 25%;
+    --ring: 213 100% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* IBM Plex Sans Font */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* 音符漂浮动画 */
+@keyframes float-slow {
+  0% { transform: translate(0px, 0px) rotate(0deg); }
+  33% { transform: translate(10px, -15px) rotate(5deg); }
+  66% { transform: translate(-5px, -8px) rotate(-3deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+@keyframes float-medium {
+  0% { transform: translate(0px, 0px) rotate(0deg); }
+  25% { transform: translate(-8px, -10px) rotate(-5deg); }
+  50% { transform: translate(5px, -15px) rotate(3deg); }
+  75% { transform: translate(-3px, -5px) rotate(-2deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+@keyframes float-fast {
+  0% { transform: translate(0px, 0px) rotate(0deg); }
+  20% { transform: translate(8px, -12px) rotate(4deg); }
+  40% { transform: translate(-5px, -8px) rotate(-3deg); }
+  60% { transform: translate(3px, -15px) rotate(2deg); }
+  80% { transform: translate(-2px, -5px) rotate(-1deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+/* 添加浏览器前缀 */
+@-webkit-keyframes float-slow {
+  0% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+  33% { -webkit-transform: translate(10px, -15px) rotate(5deg); }
+  66% { -webkit-transform: translate(-5px, -8px) rotate(-3deg); }
+  100% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+}
+
+@-webkit-keyframes float-medium {
+  0% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+  25% { -webkit-transform: translate(-8px, -10px) rotate(-5deg); }
+  50% { -webkit-transform: translate(5px, -15px) rotate(3deg); }
+  75% { -webkit-transform: translate(-3px, -5px) rotate(-2deg); }
+  100% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+}
+
+@-webkit-keyframes float-fast {
+  0% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+  20% { -webkit-transform: translate(8px, -12px) rotate(4deg); }
+  40% { -webkit-transform: translate(-5px, -8px) rotate(-3deg); }
+  60% { -webkit-transform: translate(3px, -15px) rotate(2deg); }
+  80% { -webkit-transform: translate(-2px, -5px) rotate(-1deg); }
+  100% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+}
+
+/* 应用动画的CSS类 */
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+  -webkit-animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+  -webkit-animation: float-medium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+  -webkit-animation: float-fast 4s ease-in-out infinite;
+}

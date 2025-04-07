@@ -1,0 +1,52 @@
+.tabs-container {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  margin-bottom: 0px; /* Space between tabs and text box */
+  padding: 0 10px;
+  background: white;
+}
+
+.tab {
+  display: flex;
+  position: relative;
+  align-items: center;
+  background: #DDDDDD;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.tab-button {
+  padding: 2px 20px;
+  position: relative;
+  background-color: #EEEEEE;
+  border: 1px #CCCCCC;
+  border-radius: 4px;
+  color: black;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.tab-button:hover {
+  background-color: var(--dark-blue);
+}
+
+.close-tab-button {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #555555;
+  cursor: pointer;
+}
+
+.close-tab-button:hover {
+  color: darkred;
+}

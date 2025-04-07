@@ -1,0 +1,26 @@
+.tracks {
+  display: flex;
+  flex-direction: column; /* Stacks elements vertically */
+  align-items: center; /* Centers items horizontally */
+  gap: 12px; /* Adds spacing between items */
+}
+
+.track-button {
+  padding: 0.75rem 1.5rem;
+  background: #EEEEEE;
+  border: none;
+  border-radius: 4px;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.track-button:hover {
+  transform: translateY(-2px);
+  background: #E0E0E0;
+}
+
+.track-button:active {
+  transform: translateY(0);
+  background: #DDDDDD;
+}

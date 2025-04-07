@@ -1,0 +1,39 @@
+.text-editor-container {
+  max-height: 550px;
+  width: 250px;
+  margin: 2rem 0 2rem auto; /* aligns to the left */
+  margin-left: -1.5rem; /* nudge it from the left edge */
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.editor-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.text-editor {
+  flex: 1;
+  resize: none;
+  padding: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: white;
+  color: #111827;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.text-editor:focus {
+  border-color: #3b82f6;
+}
