@@ -20,6 +20,33 @@ The application will be available at:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5001
 
+## Vercel Deployment
+This project supports deployment to Vercel. To deploy:
+
+1. Make sure you have the Vercel CLI installed:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. Log in to Vercel if you haven't already:
+   ```bash
+   vercel login
+   ```
+
+3. Set up your environment variables in the Vercel dashboard:
+   - OPENAI_API_KEY
+   - FLASK_ENV (set to "production")
+
+4. Run the deployment script:
+   ```bash
+   ./deploy.sh
+   ```
+
+Alternatively, you can deploy manually:
+   ```bash
+   vercel --prod
+   ```
+
 ### Environment Setup
 Create a `.env` file based on `.env.example`:
 ```bash
