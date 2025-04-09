@@ -125,7 +125,7 @@ const About = () => {
             : "bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400"
         )}>
           <div className="max-w-5xl mx-auto text-center px-4">
-            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">About Tune Enchanter</h1>
+            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">About BeatBot</h1>
             <p className="text-xl text-white/90">
               We're a student project team mentored by IBM, building the future of music composition with AI
             </p>
@@ -327,7 +327,7 @@ const About = () => {
                 "text-xl max-w-3xl mx-auto",
                 isDarkMode ? "text-gray-300" : "text-ibm-gray-60"
               )}>
-                The passionate students behind Tune Enchanter
+                The passionate students behind BeatBot
               </p>
             </div>
 
@@ -475,7 +475,7 @@ const About = () => {
           <p className={cn(
             isDarkMode ? "text-gray-400" : "text-ibm-gray-60"
           )}>
-            Tune Enchanter - TCD SwEng2025 Group 10
+            BeatBot - TCD SwEng2025 Group 10
           </p>
         </div>
       </footer>

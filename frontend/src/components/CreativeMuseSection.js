@@ -7,36 +7,28 @@ import * as apiService from '../lib/api';
 const CreativeMuseSection = ({ onGenerateMusic }) => {
   const { isDarkMode } = useTheme();
   const [prompt, setPrompt] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  
-  const genres = [
-    { id: 'classical', name: 'Classical', icon: '🎻' },
-    { id: 'jazz', name: 'Jazz', icon: '🎷' },
-    { id: 'pop', name: 'Pop', icon: '🎤' },
-    { id: 'folk', name: 'Folk', icon: '🪕' },
-    { id: 'rock', name: 'Rock', icon: '🤘' },
-  ];
-  
-  const handleGenreClick = (genreId) => {
-    setSelectedGenre(genreId === selectedGenre ? null : genreId);
-  };
+  const [musicExplanation, setMusicExplanation] = useState('');
   
   const handleSubmit = () => {
     if (onGenerateMusic && prompt.trim()) {
       setIsGenerating(true);
       const combinedData = {
         prompt, 
-        genre: selectedGenre,
         analysisResult
       };
       
       // Pass the generation request to parent component
       onGenerateMusic(combinedData)
+       .then(response => {
+         if (response && response.response) {
+           setMusicExplanation(response.response);
+         }
+        })
         .finally(() => {
           setIsGenerating(false);
           // Reset file state after generation
@@ -121,30 +113,20 @@ const CreativeMuseSection = ({ onGenerateMusic }) => {
         </div>
         
         <div className="p-6">
-          {/* Genre Buttons */}
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-6">
-            {genres.map((genre) => (
-              <button
-                key={genre.id}
-                onClick={() => handleGenreClick(genre.id)}
-                className={cn(
-                  "flex flex-col items-center justify-center p-3 rounded-lg transition-all",
-                  "hover:shadow-md",
-                  selectedGenre === genre.id 
-                    ? isDarkMode 
-                      ? "bg-purple-700 text-white shadow-md"
-                      : "bg-purple-100 text-purple-800 shadow-md" 
-                    : isDarkMode
-                      ? "bg-gray-700 text-gray-200"
-                      : "bg-gray-100 text-gray-800"
-                )}
-              >
-                <span className="text-2xl mb-1">{genre.icon}</span>
-                <span className="text-sm">{genre.name}</span>
-              </button>
-            ))}
-          </div>
-          
+          {/* Music Explanation Display */}
+          {musicExplanation && (
+            <div className={cn(
+              "mb-6 p-4 rounded-lg",
+              isDarkMode ? "bg-gray-700 text-gray-200" : "bg-purple-50 text-gray-700"
+            )}>
+              <h3 className={cn(
+                "text-sm font-medium mb-2",
+                isDarkMode ? "text-gray-300" : "text-purple-700"
+              )}>Music Explanation:</h3>
+              <p className="text-sm">{musicExplanation}</p>
+            </div>
+          )}
+
           {/* Description Input Field */}
           <div className="mb-4">
             <div className="relative">

@@ -251,7 +251,7 @@ const Home = () => {
           <p className={cn(
             isDarkMode ? "text-gray-400" : "text-ibm-gray-60"
           )}>
-            © {new Date().getFullYear()} Tune Enchanter - TCD SwEng2025 Group 10
+            © {new Date().getFullYear()} BeatBot - TCD SwEng2025 Group 10
           </p>
         </div>
       </footer>

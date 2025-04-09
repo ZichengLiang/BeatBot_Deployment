@@ -114,7 +114,7 @@ FLASK_ENV=development
 OPENAI_API_KEY=your_api_key_here  # Get this from https://platform.openai.com/api-keys
 
 # Frontend environment variables (if needed)
-REACT_APP_API_URL=http://localhost:5001
+REACT_APP_API_URL=http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com/
 ```
 
 IMPORTANT: NEVER commit your actual `.env` file to version control!

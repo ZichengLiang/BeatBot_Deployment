@@ -1,7 +1,7 @@
 // API Service for IBM Music AI
 // Centralized file for all API calls to the backend
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://beat-bot-deployment.vercel.app';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com';
 
 // General API call function with error handling
 const callApi = async (endpoint, method = 'GET', data = null) => {
@@ -80,6 +80,9 @@ export const uploadImageFile = (fileData) => callApi('/api/image-file-load', 'PO
 
 // This endpoint is commented out in the backend
 // export const uploadAudioFile = (fileData) => callApi('/api/audio-file-load', 'POST', fileData);
+
+// Carbon Tracking API
+export const getCarbonTracking = () => callApi('/carbonTracking', 'GET');
 
 // Get chat history
 export const getChatHistory = () => callApi('/api/chat/history');

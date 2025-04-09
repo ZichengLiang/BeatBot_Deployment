@@ -25,21 +25,15 @@ npm install
 
 # Ensure environment variable is set correctly
 echo "Configuring environment variables..."
-echo "REACT_APP_API_URL=https://beat-bot-deployment.vercel.app" > .env.production.local
-
-# Make sure the Login.js file has the correct redirect URL
-if grep -q "window.location.origin" src/pages/Login.js; then
-    echo "Fixing redirect URL in Login.js..."
-    sed -i '' 's|redirectTo={`${window.location.origin}`}|redirectTo="https://beat-bot-deployment.vercel.app"|g' src/pages/Login.js
-fi
+echo "REACT_APP_API_URL=http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com" > .env.production.local
 
 CI=false npm run build
 cd ..
 
 # Deploy to Vercel
 echo "Deploying to Vercel..."
-vercel --prod --env REACT_APP_API_URL=https://beat-bot-deployment.vercel.app
+vercel --prod --env REACT_APP_API_URL=http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com
 
 echo "Deployment complete!"
 echo "Note: Your backend should be deployed separately due to Vercel's 250MB size limit."
-echo "The frontend is configured to use: https://beat-bot-deployment.vercel.app as the API URL." 
+echo "The frontend is configured to use: http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com as the API URL." 

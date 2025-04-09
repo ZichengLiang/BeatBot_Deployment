@@ -43,7 +43,7 @@ const AppSidebar = ({ tracks = [] }) => {
           <div className="w-8 h-8 bg-ibm-blue flex items-center justify-center">
             <div className="text-white font-bold">🎵</div>
           </div>
-          <span className="text-xl font-semibold">BeatBOot</span>
+          <span className="text-xl font-semibold">BeatBot</span>
         </Link>
       </div>
       
