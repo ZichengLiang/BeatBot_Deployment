@@ -13,6 +13,10 @@
     {
       "source": "/carbonTracker",
       "destination": "http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com/carbonTracker"
+    },
+    {
+      "source": "/composer",
+      "destination": "http://beatbox-alb-1156795421.eu-west-1.elb.amazonaws.com/api/chat"
     }
   ]
 }

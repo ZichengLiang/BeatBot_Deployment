@@ -58,7 +58,6 @@ const NotationSection = ({
     const trimmed = input.trim();
     if (trimmed.length === 0) return null;
 
-    // 使用更精确的头部检测正则表达式
     const headers = {
       X: /^X:\s*\d+/m.test(trimmed),
       M: /^M:\s*\d+\/\d+/m.test(trimmed),
@@ -68,13 +67,11 @@ const NotationSection = ({
 
     let output = trimmed;
     
-    // 仅添加缺失的头部
     if (!headers.X) output = `X:1\n${output}`;
     if (!headers.M) output = `M:4/4\n${output}`;
     if (!headers.L) output = `L:1/8\n${output}`;
     if (!headers.K) output = `K:C\n${output}`;
 
-    // 确保头部顺序正确
     const orderedHeaders = [];
     if (!headers.X) orderedHeaders.push('X:1');
     if (!headers.M) orderedHeaders.push('M:4/4');
@@ -106,26 +103,22 @@ const NotationSection = ({
       try {
         if (!isActive || isGreenMode) return;
         
-        // 清空专用容器
         if (abcContainerRef.current) {
           abcContainerRef.current.innerHTML = '';
         }
 
-        // 直接使用格式化后的内容，无需长度验证
         const formattedNotation = formatAbcNotation(debouncedNotation);
         if (!formattedNotation) {
           safeSetState({ status: 'idle', message: '' });
           return;
         }
 
-        // 安全设置音频参数
         const audioParams = {
           chordsOff: false,
           qpm: 120,
           swing: 0 // Default swing value
         };
 
-        // 渲染ABC到专用容器
         // Ensure abcContainerRef.current is not null before rendering
         if (!abcContainerRef.current) {
           console.error('ABC container reference is null');
@@ -152,7 +145,6 @@ const NotationSection = ({
           return;
         }
 
-        // 初始化音频控制
         if (audioPortalRef.current) {
           try {
             synthControl = new abcjs.synth.SynthController();
@@ -163,7 +155,6 @@ const NotationSection = ({
               displayPlay: true
             });
 
-            // 初始化音频合成器
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const synth = new abcjs.synth.CreateSynth();
             
@@ -173,10 +164,8 @@ const NotationSection = ({
                 audioContext: audioContext
               });
               
-              // 关联控制器与乐谱
               await synthControl.setTune(visualObj, false);
               
-              // 预加载音色
               await synth.prime();
             }
           } catch (audioErr) {
@@ -198,7 +187,6 @@ const NotationSection = ({
       }
     };
 
-    // 添加防抖保护
     const debouncedRender = _.debounce(renderAbc, 100);
     debouncedRender();
 
@@ -206,7 +194,6 @@ const NotationSection = ({
       isActive = false;
       debouncedRender.cancel();
       
-      // 安全清理音频资源
       if (synthControl) {
         if (synthControl.stop) synthControl.stop();
         if (synthControl.destroy) synthControl.destroy();
@@ -215,7 +202,6 @@ const NotationSection = ({
         }
       }
       
-      // 清空专用容器
       if (abcContainerRef.current) {
         abcContainerRef.current.innerHTML = '';
       }
@@ -347,7 +333,6 @@ const NotationSection = ({
                   isDarkMode ? "bg-gray-700 border-gray-600" : "bg-gray-100 border-gray-300"
                 )}
               >
-                {/* 新增专用容器 */}
                 <div ref={abcContainerRef} />
                 {renderState.status === 'idle' && (
                   <div className="flex items-center justify-center h-full text-gray-500">
@@ -408,7 +393,6 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, info) {
     console.error('Component Stack:', info.componentStack);
     console.error('Error Object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
-    // 添加错误上报逻辑
     if (typeof window.trackJs !== 'undefined') {
       window.trackJs.track({
         message: 'NotationSection Error',
