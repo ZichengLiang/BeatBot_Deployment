@@ -57,7 +57,7 @@ gpt_client.api_key = os.getenv('OPENAI_API_KEY')
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/*"
+    r"/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}
 })
 
 # Set up logging
