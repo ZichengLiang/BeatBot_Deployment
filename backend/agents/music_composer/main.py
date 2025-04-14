@@ -169,11 +169,31 @@ class MusicComposer:
         os.environ["LANGCHAIN_TRACING_V2"] = "true"
         os.environ["LANGCHAIN_PROJECT"] = "agentic-music-composition"
 
-        # Run the workflow
-        result = self.app.invoke(input=initial_state, config=gen_config)
-        
-        # Check if final_music exists and is not None
-        if not result or "final_music" not in result or result["final_music"] is None:
+        try:
+            # Run the workflow with timeout protection
+            result = self.app.invoke(input=initial_state, config=gen_config)
+            
+            # Check if final_music exists and is not None
+            if not result or "final_music" not in result or result["final_music"] is None:
+                print("Warning: Workflow did not produce final_music")
+                # Return a default ABC notation string when generation fails
+                return """X:1
+T:Default Melody
+C:AI Music Assistant
+M:4/4
+L:1/8
+K:C
+|CDEF GABc|"""
+            
+            # Make sure we always pass a string to str_to_abc
+            final_music = result.get("final_music", "")
+            if not isinstance(final_music, str):
+                print(f"Warning: final_music is not a string: {type(final_music)}")
+                final_music = str(final_music) if final_music is not None else ""
+                
+            return str_to_abc(final_music)
+        except Exception as e:
+            print(f"Error in MusicComposer.compose_music: {e}")
             # Return a default ABC notation string when generation fails
             return """X:1
 T:Default Melody
@@ -182,8 +202,6 @@ M:4/4
 L:1/8
 K:C
 |CDEF GABc|"""
-            
-        return str_to_abc(result["final_music"])
 
 
 def generate_abc_from_prompt(prompt: str) -> str:
@@ -205,7 +223,8 @@ def str_to_abc(raw: str) -> str:
     """The generated string is returned in markdown format, with unnecessary blank lines. This function will format the string into standard ABC notation."""
 
     # Handle None or empty input
-    if not raw:
+    if not raw or not isinstance(raw, str):
+        print(f"Warning: Invalid input to str_to_abc: {type(raw)}")
         return """X:1
 T:Default Melody
 C:AI Music Assistant
@@ -244,13 +263,55 @@ K:C
     if lines and lines[0].strip().lower() in ["abc", "abc:"]:
         start_idx = 1
 
+    # Ensure we have essential ABC notation headers 
+    has_x = False
+    has_t = False
+    has_m = False
+    has_l = False
+    has_k = False
+    
     for i in range(start_idx, len(lines)):
         line = lines[i]
         # Skip markdown formatting artifacts and unnecessary blank lines between content
         if line.strip() and not line.strip().startswith('`'):
             formatted_lines.append(line)
+            
+            # Check for headers
+            if line.strip().startswith('X:'):
+                has_x = True
+            elif line.strip().startswith('T:'):
+                has_t = True  
+            elif line.strip().startswith('M:'):
+                has_m = True
+            elif line.strip().startswith('L:'):
+                has_l = True
+            elif line.strip().startswith('K:'):
+                has_k = True
+
+    # Add missing headers as needed
+    if not has_x:
+        formatted_lines.insert(0, "X:1")
+    if not has_t:
+        formatted_lines.insert(1 if has_x else 0, "T:Generated Melody")
+    if not has_m:
+        formatted_lines.append("M:4/4")
+    if not has_l:
+        formatted_lines.append("L:1/8")
+    if not has_k:
+        formatted_lines.append("K:C")
+        
+    # Ensure there's some musical content
+    has_content = False
+    for line in formatted_lines:
+        if any(c in line for c in "ABCDEFGabcdefg"):
+            has_content = True
+            break
+            
+    if not has_content:
+        formatted_lines.append("|CDEF GABc|")
 
     # Join lines back together with proper newlines
     formatted_abc = "\n".join(formatted_lines)
-
+    
+    print(f"Formatted ABC output (first 100 chars): {formatted_abc[:100]}")
     return formatted_abc

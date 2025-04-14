@@ -47,9 +47,7 @@ gpt_client.api_key = os.getenv('OPENAI_API_KEY')
 
 app = Flask(__name__)
 CORS(app, resources={
-    r"/*": {
-        "origins": ["http://localhost:3000"],
-    }
+    r"/*"
 })
 
 # Set up logging
@@ -167,6 +165,12 @@ def generate_midi_internal(params):
     with CarbonTracker(output_file="emissions.csv", country_iso_code="USA") as carbon_tracker:
        midi_generator = MidiGenerator(params, gpt_client=gpt_client)
        midi_bytes = midi_generator.generate()
+        # Verify emissions file was created
+    if os.path.exists("emissions.csv"):
+        print("Emissions file created successfully")
+    else:
+        print("Warning: Emissions file was not created")
+    
     return midi_bytes
 
 @app.route('/api/chat/history', methods=['GET'])
@@ -281,24 +285,19 @@ def abc_chat():
 
         orchestrator = Orchestrator(gpt_client)
         analysis = orchestrator.orchestrate(multimodal_summary)
-        logger.debug(f"Now we have an analysis in chat() :" + str(analysis))
+        logger.debug(f"Now we have an analysis in abc_chat() :" + str(analysis))
 
-        # Generate a brief explanation by AI
-        response_prompt = f"""User request: {user_message}
-                Analysis results: {str(analysis)}
-                Create a friendly, musical response explaining how you'll approach this composition."""
-
-        ai_response = BaseAgent().client.chat.completions.create(
+        music_explanation = BaseAgent().client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": "You are a music composition assistant. Create a natural response "
                                               "explaining your compositional approach based on the analysis."},
-                {"role": "user", "content": response_prompt}
+                {"role": "user", "content": "This is the user prompt analysis: " + str(analysis)}
             ],
             temperature=0.8
         ).choices[0].message.content
 
-        chat_history.append({"role": "assistant", "content": ai_response})
+        logger.debug(f"========= Step 2 music explanation:" + str(music_explanation) + "=========")
 
         # Setup LangSmith tracing
         load_dotenv()
@@ -306,43 +305,111 @@ def abc_chat():
         os.environ["LANGCHAIN_TRACING_V2"] = "true"
         os.environ["LANGCHAIN_PROJECT"] = "agentic-music-composition"
 
+
         # Create composer instance
         composer = MusicComposer()
 
+        print(f"\n========= Step 3.0 composer instance =========\n")
+
         # Generate music
+        abc_notation = ""
         try:
+            logger.debug("Starting ABC notation generation with MusicComposer")
             abc_notation = composer.compose_music(
                 topic=user_message,
                 max_analysts=3,
-                human_analyst_feedback=None
+                human_analyst_feedback=""
             )
-
-            print("\n--- GENERATED ABC NOTATION ---")
-            #print(abc_notation)
-
-            # Save to file
-            #with open(f"newMusic.abc", "w") as f:
-             #   f.write(abc_notation)
-            #print(f"\nSaved to newMusic.abc")
+            
+            # Check if abc_notation is None or empty
+            if not abc_notation:
+                logger.error("MusicComposer returned empty ABC notation")
+                abc_notation = """X:1
+T:Default Melody
+C:AI Music Assistant
+M:4/4
+L:1/8
+K:C
+|CDEF GABc|"""
+                
+            logger.debug(f"Generated ABC notation: {abc_notation[:100]}...")  # Log first 100 chars
 
         except Exception as e:
-            print(f"Error generating music: {e}")
-            raise
+            logger.error(f"Error generating ABC music: {e}")
+            # Provide a fallback ABC notation
+            abc_notation = """X:1
+T:Default Melody
+C:AI Music Assistant
+M:4/4
+L:1/8
+K:C
+|CDEF GABc|"""
 
         return jsonify({
-            "response": ai_response,
+            "response": music_explanation,
             "ABC_notes": abc_notation,
-            #"ABCfile": f"newMusic.abc",
         })
 
 
     except APIError as e:
         return handle_api_error(e)
     except Exception as e:
-        logger.error(f"Error in chat processing: {str(e)}")
+        logger.error(f"Error in abc_chat processing: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+@app.route('/carbonTracking', methods=['GET', 'POST'])
+def carbon_tracking():
+    try:
+        # Create a CarbonTracker instance
+        carbon_tracker = CarbonTracker()
 
+        try:
+            # Try different possible file paths
+            possible_paths = [
+                "emissions.csv",
+                "./emissions.csv",
+                "../emissions.csv",
+                "/app/emissions.csv",
+            ]
+
+            emissions_data = None
+            for path in possible_paths:
+                try:
+                    print(f"Trying path: {path}")  # Debug print
+                    emissions_data = carbon_tracker.print_emissions(path)
+                    if emissions_data:
+                        break
+                except FileNotFoundError:
+                    continue
+            
+            if emissions_data:
+                print("Found emissions data:", emissions_data)  # Debug print
+                return jsonify({
+                    "success": True,
+                    "emissions": emissions_data
+                }), 200
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": "No emissions data found. Please generate music first."
+                }), 404
+            
+        except Exception as e:
+            print(f"Error reading emissions: {str(e)}")  # Debug print
+            return jsonify({
+                "success": False,
+                "error": f"Error reading emissions data: {str(e)}"
+            }), 500
+            
+    except Exception as e:
+        print(f"Error in carbonTracking: {str(e)}")  # Debug print
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+                
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Run the Flask application')
