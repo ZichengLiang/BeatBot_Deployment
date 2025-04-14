@@ -4,10 +4,11 @@ buildCommand = "pip install -r requirements.txt"
 
 [deploy]
 startCommand = "python app.py"
-healthcheckPath = "/"
+healthcheckPath = "/api/test"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
+PORT = 5001
 
 [start]
 cmd = "python app.py" 
