@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from langchain_deepseek import ChatDeepSeek
+from langchain_mistralai import ChatMistral
 
 # Load environment variables
 load_dotenv()
