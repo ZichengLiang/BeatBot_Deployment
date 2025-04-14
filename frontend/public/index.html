@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="BeatBot - AI Music Composition"
+      content="BeatBot - AI-powered music generation platform"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -39,6 +39,22 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <!-- This script helps prevent 404 errors for SPA routing on certain hosts -->
+    <script>
+      // Single Page Apps for GitHub Pages/static hosts
+      // This solution handles direct URL access issues by checking 
+      // url redirect or fallback to index.html
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
     <script src="https://accounts.google.com/gsi/client" async></script>
   </body>
 </html>

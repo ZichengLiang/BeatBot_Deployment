@@ -4,5 +4,8 @@
   "outputDirectory": "frontend/build",
   "env": {
     "REACT_APP_API_URL": "https://beatbotdeployment-production.up.railway.app/"
-  }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
