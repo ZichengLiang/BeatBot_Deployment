@@ -150,10 +150,15 @@ class MusicComposer:
         """Helper method to ensure the last message is not an assistant message for Mistral API"""
         if not messages or len(messages) == 0:
             return messages
+        
+        # First, remove any assistant messages at the end
+        while messages and isinstance(messages[-1], AIMessage):
+            messages = messages[:-1]
+        
+        # If we ended up with no messages, add a default user message
+        if not messages:
+            return [HumanMessage(content="Please continue.")]
             
-        if isinstance(messages[-1], AIMessage):
-            # Skip the last message if it's from an assistant
-            return messages[:-1]
         return messages
 
     def compose_music(self, topic: str, max_analysts: int = 3, human_analyst_feedback: Optional[str] = None) -> str:

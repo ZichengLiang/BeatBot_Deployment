@@ -31,7 +31,6 @@ def get_mistral_llm():
         temperature=1.0,
         max_retries=1,
         api_key=mistral_api_key,
-        assistant_prefixed_message=True,
     )
 
 # Prompts and instructions

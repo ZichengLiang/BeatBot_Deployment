@@ -3,7 +3,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, get_
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.document_loaders import WikipediaLoader
 
-from .config import get_mistral_llm, QUESTION_INSTRUCTIONS, SEARCH_INSTRUCTIONS, ANSWER_INSTRUCTIONS, \
+from .config import get_chat_llm, get_mistral_llm, QUESTION_INSTRUCTIONS, SEARCH_INSTRUCTIONS, ANSWER_INSTRUCTIONS, \
     SECTION_WRITER_INSTRUCTIONS
 from .models import InterviewState, SearchQuery
 
@@ -24,10 +24,15 @@ def generate_question(state: InterviewState):
     # This is needed because Mistral API requires the last message to be from a user or tool
     filtered_messages = []
     for msg in messages:
-        if isinstance(msg, AIMessage) and msg == messages[-1]:
-            # Skip if the last message is from an assistant
-            continue
         filtered_messages.append(msg)
+        
+    # Remove any assistant messages at the end
+    while filtered_messages and isinstance(filtered_messages[-1], AIMessage):
+        filtered_messages = filtered_messages[:-1]
+    
+    # If we ended up with no messages, add a default user message
+    if not filtered_messages:
+        filtered_messages = [HumanMessage(content=f"Tell me about {analyst.persona}")]
 
     # Generate question
     system_message = QUESTION_INSTRUCTIONS.format(goals=analyst.persona)
@@ -60,10 +65,15 @@ def search_web(state: InterviewState):
     # This is needed because Mistral API requires the last message to be from a user or tool
     filtered_messages = []
     for msg in messages:
-        if isinstance(msg, AIMessage) and msg == messages[-1]:
-            # Skip if the last message is from an assistant
-            continue
         filtered_messages.append(msg)
+    
+    # Remove any assistant messages at the end
+    while filtered_messages and isinstance(filtered_messages[-1], AIMessage):
+        filtered_messages = filtered_messages[:-1]
+    
+    # If we ended up with no messages, add a default user message
+    if not filtered_messages:
+        filtered_messages = [HumanMessage(content="Please search for relevant information.")]
     
     # Now invoke the LLM with filtered messages
     search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + filtered_messages)
@@ -100,10 +110,15 @@ def search_wikipedia(state: InterviewState):
     # This is needed because Mistral API requires the last message to be from a user or tool
     filtered_messages = []
     for msg in messages:
-        if isinstance(msg, AIMessage) and msg == messages[-1]:
-            # Skip if the last message is from an assistant
-            continue
         filtered_messages.append(msg)
+    
+    # Remove any assistant messages at the end
+    while filtered_messages and isinstance(filtered_messages[-1], AIMessage):
+        filtered_messages = filtered_messages[:-1]
+    
+    # If we ended up with no messages, add a default user message
+    if not filtered_messages:
+        filtered_messages = [HumanMessage(content="Please search for relevant information.")]
     
     # Now invoke the LLM with filtered messages
     search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + filtered_messages)
@@ -136,10 +151,15 @@ def generate_answer(state: InterviewState):
     # This is needed because Mistral API requires the last message to be from a user or tool
     filtered_messages = []
     for msg in messages:
-        if isinstance(msg, AIMessage) and msg == messages[-1]:
-            # Skip if the last message is from an assistant
-            continue
         filtered_messages.append(msg)
+    
+    # Remove any assistant messages at the end
+    while filtered_messages and isinstance(filtered_messages[-1], AIMessage):
+        filtered_messages = filtered_messages[:-1]
+    
+    # If we ended up with no messages, add a default user message
+    if not filtered_messages:
+        filtered_messages = [HumanMessage(content="Please provide information on this topic.")]
 
     # Answer question
     system_message = ANSWER_INSTRUCTIONS.format(goals=analyst.persona, context=context)
@@ -196,7 +216,7 @@ def write_section(state: InterviewState):
     analyst = state["analyst"]
 
     # Get LLM
-    chat_llm = get_mistral_llm()
+    chat_llm = get_chat_llm()
 
     # Write section using either the gathered source docs from interview (context) or the interview itself (interview)
     system_message = SECTION_WRITER_INSTRUCTIONS.format(focus=analyst.description)
