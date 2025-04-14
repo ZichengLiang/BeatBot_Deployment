@@ -76,6 +76,7 @@ pexpect==4.9.0
 pillow==11.1.0
 pinecone==6.0.0
 pinecone-plugin-interface==0.0.7
+pretty_midi
 prompt_toolkit==3.0.50
 protobuf==5.29.3
 ptyprocess==0.7.0
