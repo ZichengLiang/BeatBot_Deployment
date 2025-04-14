@@ -43,7 +43,21 @@ def search_web(state: InterviewState):
 
     # Search query
     structured_llm = chat_llm.with_structured_output(SearchQuery)
-    search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + state['messages'])
+    
+    # Get the messages from state
+    messages = state['messages']
+    
+    # Ensure the last message is from a user (not an assistant)
+    # This is needed because Mistral API requires the last message to be from a user or tool
+    filtered_messages = []
+    for msg in messages:
+        if isinstance(msg, AIMessage) and msg == messages[-1]:
+            # Skip if the last message is from an assistant
+            continue
+        filtered_messages.append(msg)
+    
+    # Now invoke the LLM with filtered messages
+    search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + filtered_messages)
 
     # Initialize search tool
     tavily_search = TavilySearchResults(max_results=3)
@@ -69,7 +83,21 @@ def search_wikipedia(state: InterviewState):
 
     # Search query
     structured_llm = chat_llm.with_structured_output(SearchQuery)
-    search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + state["messages"])
+    
+    # Get the messages from state
+    messages = state["messages"]
+    
+    # Ensure the last message is from a user (not an assistant)
+    # This is needed because Mistral API requires the last message to be from a user or tool
+    filtered_messages = []
+    for msg in messages:
+        if isinstance(msg, AIMessage) and msg == messages[-1]:
+            # Skip if the last message is from an assistant
+            continue
+        filtered_messages.append(msg)
+    
+    # Now invoke the LLM with filtered messages
+    search_query = structured_llm.invoke([SystemMessage(content=SEARCH_INSTRUCTIONS)] + filtered_messages)
 
     # Search
     search_docs = WikipediaLoader(query=search_query.search_query, load_max_docs=2).load()
