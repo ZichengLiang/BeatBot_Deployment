@@ -67,6 +67,7 @@ mido==1.3.3
 more-itertools==10.6.0
 music21==9.3.0
 numpy==2.2.2
+ollama
 openai==1.61.1
 orjson==3.10.16
 packaging==24.2
