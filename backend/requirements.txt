@@ -59,7 +59,7 @@ langchain-community
 langchain-openai
 langchain-deepseek
 langchain-mistralai
-langchain-==0.3.9
+langchain==0.3.9
 langgraph
 langsmith==0.3.30
 MarkupSafe==3.0.2
