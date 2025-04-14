@@ -10,7 +10,7 @@ from . import config
 from .config import get_chat_llm 
 from .models import MusicComposerState, Analyst, InterviewState, Perspectives
 from langchain_deepseek import ChatDeepSeek
-from langchain.schema import SystemMessage, HumanMessage
+from langchain.schema import SystemMessage, HumanMessage, AIMessage
 import io
 
 from .interview_graph import \
@@ -90,6 +90,10 @@ class MusicComposer:
         state["current_step"] = "interview"
         state["step_description"] = f"Interviewing analyst {state['analyst'].name}..."
 
+        # Filter messages to ensure the last message is not an assistant message
+        if "messages" in state:
+            state["messages"] = self._filter_messages(state["messages"])
+
         # Create and run the interview graph
         interview_graph = create_interview_graph()
         result = interview_graph.invoke(state)
@@ -141,6 +145,16 @@ class MusicComposer:
         state["step_description"] = "Finalizing composition..."
 
         return {"final_music": final_music.content, "current_step": "compose_final_music"}
+
+    def _filter_messages(self, messages):
+        """Helper method to ensure the last message is not an assistant message for Mistral API"""
+        if not messages or len(messages) == 0:
+            return messages
+            
+        if isinstance(messages[-1], AIMessage):
+            # Skip the last message if it's from an assistant
+            return messages[:-1]
+        return messages
 
     def compose_music(self, topic: str, max_analysts: int = 3, human_analyst_feedback: Optional[str] = None) -> str:
         """Compose music in ABC notation based on a topic"""
