@@ -1,7 +1,7 @@
 // API Service for IBM Music AI
 // Centralized file for all API calls to the backend
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.sweng25-ai-music-composition.com';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://beatbotdeployment-production.up.railway.app/';
 
 // General API call function with error handling
 const callApi = async (endpoint, method = 'GET', data = null) => {

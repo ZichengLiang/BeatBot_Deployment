@@ -25,15 +25,15 @@ npm install
 
 # Ensure environment variable is set correctly
 echo "Configuring environment variables..."
-echo "REACT_APP_API_URL=https://api.sweng25-ai-music-composition.com" > .env.production.local
+echo "REACT_APP_API_URL=https://beatbotdeployment-production.up.railway.app/" > .env.production.local
 
 CI=false npm run build
 cd ..
 
 # Deploy to Vercel
 echo "Deploying to Vercel..."
-vercel --prod --env REACT_APP_API_URL=https://api.sweng25-ai-music-composition.com
+vercel --prod --env REACT_APP_API_URL=https://beatbotdeployment-production.up.railway.app/
 
 echo "Deployment complete!"
 echo "Note: Your backend should be deployed separately due to Vercel's 250MB size limit."
-echo "The frontend is configured to use: https://api.sweng25-ai-music-composition.com as the API URL." 
+echo "The frontend is configured to use: https://beatbotdeployment-production.up.railway.app/ as the API URL." 

@@ -114,7 +114,7 @@ FLASK_ENV=development
 OPENAI_API_KEY=your_api_key_here  # Get this from https://platform.openai.com/api-keys
 
 # Frontend environment variables (if needed)
-REACT_APP_API_URL=https://api.sweng25-ai-music-composition.com/
+REACT_APP_API_URL=https://beatbotdeployment-production.up.railway.app//
 ```
 
 IMPORTANT: NEVER commit your actual `.env` file to version control!
