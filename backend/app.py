@@ -31,7 +31,7 @@ from music_generation_factory import MusicGeneratorFactory, initialize_generator
 # from analysers.audio_analyser import AudioAnalyser
 from analysers.text_analyser import TextAnalyser
 from analysers.image_analyser import ImageAnalyser
-from analysers.midi_analyser import MidiAnalyser
+# from analysers.midi_analyser import MidiAnalyser # Disabled MIDI Analyser as we have package conflicts
 from analysers.orchestrator import Orchestrator
 from carbonTracker import CarbonTracker
 
