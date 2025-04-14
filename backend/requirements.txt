@@ -54,14 +54,14 @@ jsonpointer==3.0.0
 jupyterlab_widgets==3.0.14
 keyring==25.6.0
 kiwisolver==1.4.8
-langchain-core==0.3.51
+langchain-core
 langchain-community
 langchain-openai
 langchain-deepseek
 langchain-mistralai
-langchain==0.3.9
+langchain
 langgraph
-langsmith==0.3.30
+langsmith
 MarkupSafe==3.0.2
 matplotlib==3.10.1
 matplotlib-inline==0.1.7
