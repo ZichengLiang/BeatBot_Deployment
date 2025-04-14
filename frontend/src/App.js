@@ -349,9 +349,7 @@ function App() {
               element={
                 <PrivateRoute>
                   <MainLayout>
-                    <div className="p-6">
-                      <Composer />
-                    </div>
+                    <Composer />
                   </MainLayout>
                 </PrivateRoute>
               }
