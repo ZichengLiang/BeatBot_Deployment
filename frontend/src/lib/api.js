@@ -10,7 +10,11 @@ const callApi = async (endpoint, method = 'GET', data = null) => {
       method,
       headers: {
         'Accept': 'application/json',
+        // Force HTTP/1.1
+        'Connection': 'keep-alive'
       },
+      // Set a very long timeout (15 minutes)
+      timeout: 900000,
     };
 
     // Add Content-Type header for JSON requests
