@@ -31,39 +31,7 @@ function Composer() {
   const [trackName, setTrackName] = useState('Your Creation');
   const [workflowState, setWorkflowState] = useState(null);
   const [generationError, setGenerationError] = useState(null) 
-  const [musicData, setMusicData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showEmissions, setShowEmissions] = useState(false);
   
-  const fetchMusicData = async () => {
-    try {
-      console.log('Starting emissions data fetch...'); 
-      
-      const response = await apiService.getCarbonTracking();
-      
-      console.log('Response status:', response.status);
-      
-      const data = await response.json();
-      console.log('Raw emissions data:', data);
-      
-      if (data.success && data.emissions) {
-        console.log('Setting emissions data:', data.emissions);
-        setMusicData(data.emissions);
-        setShowEmissions(true);
-      } else {
-        console.log('No emissions data in response:', data);
-        setError(data.error || 'No emissions data available');
-      }
-      
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching emissions data:', error);
-      setError(error.message);
-      setLoading(false);
-    }
-  };
- 
   // Function to generate music based on the Creative Muse input
   const handleGenerateMusic = async ({ prompt, analysisResult }) => {
     // Clear any previous errors
@@ -139,9 +107,6 @@ function Composer() {
               animating: false
             });
 
-            // Fetch emissions data after successful generation
-            await fetchMusicData();
-            
             resolve(); // Resolve the promise on success
           } catch (error) {
             console.error("Error generating ABC notation:", error);
@@ -199,9 +164,6 @@ function Composer() {
               animating: false
             });
 
-            // Fetch emissions data after successful generation
-            await fetchMusicData();
-            
             resolve(); // Resolve the promise on success
           } catch (error) {
             console.error("Error generating MIDI:", error);
@@ -261,25 +223,6 @@ function Composer() {
         <div className="mt-2 flex items-center space-x-3">
           <div className="text-sm text-blue-600 dark:text-blue-400">
             <p>Current Mode: {isGreenMode ? "Green Mode (Direct MIDI)" : "Standard Mode (ABC Notation)"}</p>
-            {showEmissions && (
-              <div>
-                {loading ? (
-                  <p>Loading emissions data...</p>
-                ) : error ? (
-                  <p>Error loading emissions: {error}</p>
-                ) : musicData && musicData.total_emissions ? (
-                  <div className="space-y-1">
-                    <p>Carbon Footprint:</p>
-                    <ul className="list-disc pl-5">
-                      <li>Total Emissions: {musicData.total_emissions} kgCO2eq</li>
-                      <li>Energy Consumed: {musicData.total_energy} kWh</li>
-                    </ul>
-                  </div>
-                ) : (
-                  <p>No emissions data available</p>
-                )}
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@ from analysers.text_analyser import TextAnalyser
 from analysers.image_analyser import ImageAnalyser
 # from analysers.midi_analyser import MidiAnalyser # Disabled MIDI Analyser as we have package conflicts
 from analysers.orchestrator import Orchestrator
-from carbonTracker import CarbonTracker
+# Remove carbon tracker import
 
 from midiutil import MIDIFile
 from openai import OpenAI
@@ -172,15 +172,9 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 def generate_midi_internal(params):
-    with CarbonTracker(output_file="emissions.csv", country_iso_code="USA") as carbon_tracker:
-       midi_generator = MidiGenerator(params, gpt_client=gpt_client)
-       midi_bytes = midi_generator.generate()
-        # Verify emissions file was created
-    if os.path.exists("emissions.csv"):
-        print("Emissions file created successfully")
-    else:
-        print("Warning: Emissions file was not created")
-    
+    # Remove carbon tracking code
+    midi_generator = MidiGenerator(params, gpt_client=gpt_client)
+    midi_bytes = midi_generator.generate()
     return midi_bytes
 
 @app.route('/api/chat/history', methods=['GET'])
@@ -369,54 +363,11 @@ K:C
 
 @app.route('/carbonTracking', methods=['GET', 'POST'])
 def carbon_tracking():
-    try:
-        # Create a CarbonTracker instance
-        carbon_tracker = CarbonTracker()
-
-        try:
-            # Try different possible file paths
-            possible_paths = [
-                "emissions.csv",
-                "./emissions.csv",
-                "../emissions.csv",
-                "/app/emissions.csv",
-            ]
-
-            emissions_data = None
-            for path in possible_paths:
-                try:
-                    print(f"Trying path: {path}")  # Debug print
-                    emissions_data = carbon_tracker.print_emissions(path)
-                    if emissions_data:
-                        break
-                except FileNotFoundError:
-                    continue
-            
-            if emissions_data:
-                print("Found emissions data:", emissions_data)  # Debug print
-                return jsonify({
-                    "success": True,
-                    "emissions": emissions_data
-                }), 200
-            else:
-                return jsonify({
-                    "success": False,
-                    "error": "No emissions data found. Please generate music first."
-                }), 404
-            
-        except Exception as e:
-            print(f"Error reading emissions: {str(e)}")  # Debug print
-            return jsonify({
-                "success": False,
-                "error": f"Error reading emissions data: {str(e)}"
-            }), 500
-            
-    except Exception as e:
-        print(f"Error in carbonTracking: {str(e)}")  # Debug print
-        return jsonify({
-            "success": False,
-            "error": str(e)
-        }), 500
+    # This endpoint will be removed
+    return jsonify({
+        "success": False,
+        "error": "Carbon tracking has been removed"
+    }), 404
 
 
                 
