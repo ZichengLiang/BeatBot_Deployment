@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from langchain_deepseek import ChatDeepSeek
-from langchain_mistralai import ChatMistral
+from langchain_mistralai import ChatMistralAI
 
 # Load environment variables
 load_dotenv()
@@ -26,7 +26,7 @@ def get_reasoner_llm():
     )
 
 def get_mistral_llm():
-    return ChatMistral(
+    return ChatMistralAI(
         model="mistral-large-latest",
         temperature=1.0,
         max_retries=1,
