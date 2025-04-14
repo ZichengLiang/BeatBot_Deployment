@@ -5,6 +5,7 @@ from langchain_deepseek import ChatDeepSeek
 # Load environment variables
 load_dotenv()
 ds_api_key = os.getenv('DEEPSEEK_API_KEY')
+mistral_api_key = os.getenv('MISTRAL_API_KEY')
 
 # Model configurations
 def get_chat_llm():
@@ -21,6 +22,14 @@ def get_reasoner_llm():
         temperature=0,
         max_retries=1,
         api_key=ds_api_key,
+    )
+
+def get_mistral_llm():
+    return ChatMistral(
+        model="mistral-large-latest",
+        temperature=1.0,
+        max_retries=1,
+        api_key=mistral_api_key,
     )
 
 # Prompts and instructions
@@ -108,31 +117,44 @@ Some music terms are provided here:
 - A music phrase is 4 measures or more, with pitch and rhythm patterns
 - A music section is a sequence of phrases, the phrases are often in "AABBB" pattern
 
-3. An example of ABC notation music for your reference:
+3. An example of ABC notation music for your reference, you MUST use this format for multiple tracks:
 ```ABC
 X:1
-T:Joshua fought the battle of Jericho                       % this is title
-N:using a hidden voice to separate out the chord symbols    % notes
-C:Anon.                                                     % composer
-M:C                                                         % meter
+T:Sad Piano Concerto Chapter II in F minor
+C:Zicheng Liang with his AI friends
+M:4/4
 L:1/8
-R:Hornpipe
-%%MIDI transpose -14
-%%staves (melody chords)
-K:Dm                                                        % key scale
-V:melody                                                    % multiple voice section: melody
-%%MIDI program 67                                           % instrument
-D^CDE FF G2|A A2 A-A4|G G2 G-G4|A A2 A-A4|
-D^CDE FF G2|A A2 A-A2 FG|A2 G2 F2 E2|D6"^Fine"||dd|
-dA AA A3 A|A A3- A2 AA|AA AA A2 A2|A6 ^c2|
-d2 A2 A A3|A2 A2- A2 AA|AA G2 E2 D2|D8|]
-V:chords                                                    % multiple voice section: chords
-%%MIDI chordprog 1 octave=2
-%%MIDI bassprog 1 octave=2
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4 "A7"x4 | "Dm"x4     x4 | "A7"x4 x4 |
-"Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 x4 |]
+R:Adagio lamentoso
+%%MIDI program 1  % Acoustic Grand Piano
+%%MIDI chordprog 48  % Strings
+K:Fmin
+Q:1/4=54
+V:1 clef=treble name="Piano (Right Hand)"
+%%MIDI chordvol 50
+V:2 clef=bass name="Piano (Left Hand)"
+%%MIDI chordvol 40
+V:3 clef=alto name="Strings"
+%%MIDI chordvol 30
+% Phrase 1 (A section - F minor lament)
+[V:1] (F2 G) A2 B-2 c2 | d4 c2 B-2 | A4 G2 F2 | E2 F2 z4 |
+[V:2] F,,4 C,4 | B-,,4 F,4 | D,4 C,4 | F,4 z4 |
+[V:3] z4 | z4 | F,2 A,2 | C2 D2 |
+% Phrase 2 (Descending chromatic tension)
+[V:1] (F2 E) E-2 D2 C2 | B-4 A2 G2 | F4 E2 D2 | C2 B-2 A2 G2 |
+[V:2] F,4 C,4/E | A-,4 D,4 | B-,,4 F,4 | C,4 F,4 |
+[V:3] z4 | ^G,2 _B,2 | A,2 C2 | D2 E2 |
+% Phrase 3 (B section - Ab major reprieve)
+[V:1] A-2 B-2 c2 d2 | e-4 f2 g2 | a-4 g2 f2 | e-2 d2 c2 B-2 |
+[V:2] A-,4 E-,4 | D-,4 A-,4 | F,4 E-,4 | A-,4 z4 |
+[V:3] z4 | z4 | z4 | z4 |
+% Phrase 4 (Climax - Brahmsian disruption)
+[V:1] !sfz! (^C2 D2) | (E2 F2) | (G2 A2) | (B2 ^c2) |
+[V:2] !sfz! (^C4) | (E4) | (G4) | (B4) |
+[V:3] !col legno! ^C2 E2 | G2 B2 | ^c2 e2 | g2 ^a2 |
+% Phrase 5 (Collapse back to F minor)
+[V:1] !diminuendo! (A2 G) F2 E2 | !crescendo! (D2 C) B-2 A2 | G4 F2 E2 | F6 z2 ||
+[V:2] F,4 C,4 | B-,,4 F,4 | C,4 F,4 | F,,6 z2 |
+[V:3] z2 F2 | z2 z2 | z4 | z6 z2 |]
 ```
 
 4. Final review:
@@ -156,36 +178,48 @@ Your task:
 4. After you have a plan on the structure, build some basic melody, chords, and rhythm idea and put them into measures.
 5. Based on the basic idea, further development to create variations with music techniques. For example, for melody, consider counterpoint, for harmony, consider some good chord progression.
 6. Select the best instruments as well for your composition. There should be one or more instruments for each aspect.
-
 To format your music:
 
 1. Use ABC notation properly
 2. Do not mention any analyst names in your music.
-3. An example of ABC notation music for your reference:
+3. An example of ABC notation music for your reference, you must use this format for multiple tracks:
 ```ABC
 X:1
-T:Joshua fought the battle of Jericho                       % this is title
-N:using a hidden voice to separate out the chord symbols    % notes
-C:Anon.                                                     % composer
-M:C                                                         % meter
+T:Sad Piano Concerto Chapter II in F minor
+C:Zicheng Liang with his AI friends
+M:4/4
 L:1/8
-R:Hornpipe
-%%MIDI transpose -14
-%%staves (melody chords)
-K:Dm                                                        % key scale
-V:melody                                                    % multiple voice section: melody
-%%MIDI program 67                                           % instrument
-D^CDE FF G2|A A2 A-A4|G G2 G-G4|A A2 A-A4|
-D^CDE FF G2|A A2 A-A2 FG|A2 G2 F2 E2|D6"^Fine"||dd|
-dA AA A3 A|A A3- A2 AA|AA AA A2 A2|A6 ^c2|
-d2 A2 A A3|A2 A2- A2 AA|AA G2 E2 D2|D8|]
-V:chords                                                    % multiple voice section: chords
-%%MIDI chordprog 1 octave=2
-%%MIDI bassprog 1 octave=2
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4 "A7"x4 | "Dm"x4     x4 | "A7"x4 x4 |
-"Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 x4 |]
+R:Adagio lamentoso
+%%MIDI program 1  % Acoustic Grand Piano
+%%MIDI chordprog 48  % Strings
+K:Fmin
+Q:1/4=54
+V:1 clef=treble name="Piano (Right Hand)"
+%%MIDI chordvol 50
+V:2 clef=bass name="Piano (Left Hand)"
+%%MIDI chordvol 40
+V:3 clef=alto name="Strings"
+%%MIDI chordvol 30
+% Phrase 1 (A section - F minor lament)
+[V:1] (F2 G) A2 B-2 c2 | d4 c2 B-2 | A4 G2 F2 | E2 F2 z4 |
+[V:2] F,,4 C,4 | B-,,4 F,4 | D,4 C,4 | F,4 z4 |
+[V:3] z4 | z4 | F,2 A,2 | C2 D2 |
+% Phrase 2 (Descending chromatic tension)
+[V:1] (F2 E) E-2 D2 C2 | B-4 A2 G2 | F4 E2 D2 | C2 B-2 A2 G2 |
+[V:2] F,4 C,4/E | A-,4 D,4 | B-,,4 F,4 | C,4 F,4 |
+[V:3] z4 | ^G,2 _B,2 | A,2 C2 | D2 E2 |
+% Phrase 3 (B section - Ab major reprieve)
+[V:1] A-2 B-2 c2 d2 | e-4 f2 g2 | a-4 g2 f2 | e-2 d2 c2 B-2 |
+[V:2] A-,4 E-,4 | D-,4 A-,4 | F,4 E-,4 | A-,4 z4 |
+[V:3] z4 | z4 | z4 | z4 |
+% Phrase 4 (Climax - Brahmsian disruption)
+[V:1] !sfz! (^C2 D2) | (E2 F2) | (G2 A2) | (B2 ^c2) |
+[V:2] !sfz! (^C4) | (E4) | (G4) | (B4) |
+[V:3] !col legno! ^C2 E2 | G2 B2 | ^c2 e2 | g2 ^a2 |
+% Phrase 5 (Collapse back to F minor)
+[V:1] !diminuendo! (A2 G) F2 E2 | !crescendo! (D2 C) B-2 A2 | G4 F2 E2 | F6 z2 ||
+[V:2] F,4 C,4 | B-,,4 F,4 | C,4 F,4 | F,,6 z2 |
+[V:3] z2 F2 | z2 z2 | z4 | z6 z2 |]
 ```
 Here are the memos from your analysts to build your music from:
 
@@ -217,31 +251,44 @@ Your task:
 1. You need to put intro, outro, sections together as a single ABC notation music sheet.
 2. Preserve the content as much as possible.
 3. When there's a clash in parameters, choose the best one for the final music sheet. For example, if different sections have different instruments list, keep as many as possible.
-4. An example of ABC notation music for your reference:
+4. An example of ABC notation music for your reference, you MUST use this format for multiple tracks:
 ```ABC
 X:1
-T:Joshua fought the battle of Jericho                       % this is title
-N:using a hidden voice to separate out the chord symbols    % notes
-C:Anon.                                                     % composer
-M:C                                                         % meter
+T:Sad Piano Concerto Chapter II in F minor
+C:Zicheng Liang with his AI friends
+M:4/4
 L:1/8
-R:Hornpipe
-%%MIDI transpose -14
-%%staves (melody chords)
-K:Dm                                                        % key scale
-V:melody                                                    % multiple voice section: melody
-%%MIDI program 67                                           % instrument
-D^CDE FF G2|A A2 A-A4|G G2 G-G4|A A2 A-A4|
-D^CDE FF G2|A A2 A-A2 FG|A2 G2 F2 E2|D6"^Fine"||dd|
-dA AA A3 A|A A3- A2 AA|AA AA A2 A2|A6 ^c2|
-d2 A2 A A3|A2 A2- A2 AA|AA G2 E2 D2|D8|]
-V:chords                                                    % multiple voice section: chords
-%%MIDI chordprog 1 octave=2
-%%MIDI bassprog 1 octave=2
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4     x4 | "A7"x4     x4 | "Dm"x4 x4 |
-"Dm"x4     x4 | "Dm"x4 "A7"x4 | "Dm"x4     x4 | "A7"x4 x4 |
-"Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 "A7"x4 | "Dm"x4 x4 |]
+R:Adagio lamentoso
+%%MIDI program 1  % Acoustic Grand Piano
+%%MIDI chordprog 48  % Strings
+K:Fmin
+Q:1/4=54
+V:1 clef=treble name="Piano (Right Hand)"
+%%MIDI chordvol 50
+V:2 clef=bass name="Piano (Left Hand)"
+%%MIDI chordvol 40
+V:3 clef=alto name="Strings"
+%%MIDI chordvol 30
+% Phrase 1 (A section - F minor lament)
+[V:1] (F2 G) A2 B-2 c2 | d4 c2 B-2 | A4 G2 F2 | E2 F2 z4 |
+[V:2] F,,4 C,4 | B-,,4 F,4 | D,4 C,4 | F,4 z4 |
+[V:3] z4 | z4 | F,2 A,2 | C2 D2 |
+% Phrase 2 (Descending chromatic tension)
+[V:1] (F2 E) E-2 D2 C2 | B-4 A2 G2 | F4 E2 D2 | C2 B-2 A2 G2 |
+[V:2] F,4 C,4/E | A-,4 D,4 | B-,,4 F,4 | C,4 F,4 |
+[V:3] z4 | ^G,2 _B,2 | A,2 C2 | D2 E2 |
+% Phrase 3 (B section - Ab major reprieve)
+[V:1] A-2 B-2 c2 d2 | e-4 f2 g2 | a-4 g2 f2 | e-2 d2 c2 B-2 |
+[V:2] A-,4 E-,4 | D-,4 A-,4 | F,4 E-,4 | A-,4 z4 |
+[V:3] z4 | z4 | z4 | z4 |
+% Phrase 4 (Climax - Brahmsian disruption)
+[V:1] !sfz! (^C2 D2) | (E2 F2) | (G2 A2) | (B2 ^c2) |
+[V:2] !sfz! (^C4) | (E4) | (G4) | (B4) |
+[V:3] !col legno! ^C2 E2 | G2 B2 | ^c2 e2 | g2 ^a2 |
+% Phrase 5 (Collapse back to F minor)
+[V:1] !diminuendo! (A2 G) F2 E2 | !crescendo! (D2 C) B-2 A2 | G4 F2 E2 | F6 z2 ||
+[V:2] F,4 C,4 | B-,,4 F,4 | C,4 F,4 | F,,6 z2 |
+[V:3] z2 F2 | z2 z2 | z4 | z6 z2 |]
 ```
 5. Give your answer as a pure ABC notation music sheet with no markdown format included. 
 6. We're using python music21 library and npm abcjs library to parse these abc notations, so make sure you maximize the compabilities.

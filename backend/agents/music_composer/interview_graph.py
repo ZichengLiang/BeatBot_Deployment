@@ -3,7 +3,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage, get_
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_community.document_loaders import WikipediaLoader
 
-from .config import get_chat_llm, QUESTION_INSTRUCTIONS, SEARCH_INSTRUCTIONS, ANSWER_INSTRUCTIONS, \
+from .config import get_mistral_llm, QUESTION_INSTRUCTIONS, SEARCH_INSTRUCTIONS, ANSWER_INSTRUCTIONS, \
     SECTION_WRITER_INSTRUCTIONS
 from .models import InterviewState, SearchQuery
 
@@ -18,7 +18,7 @@ def generate_question(state: InterviewState):
     messages = state["messages"]
 
     # Get llm
-    llm = get_chat_llm()
+    llm = get_mistral_llm()
 
     # Generate question
     system_message = QUESTION_INSTRUCTIONS.format(goals=analyst.persona)
@@ -31,7 +31,7 @@ def generate_question(state: InterviewState):
 def search_web(state: InterviewState):
     """ Retrieve docs from web search """
     # Get LLM
-    chat_llm = get_chat_llm()
+    chat_llm = get_mistral_llm()
 
     # Ensure context exists
     if "context" not in state:
@@ -65,7 +65,7 @@ def search_web(state: InterviewState):
 def search_wikipedia(state: InterviewState):
     """ Retrieve docs from wikipedia """
     # Get LLM
-    chat_llm = get_chat_llm()
+    chat_llm = get_mistral_llm()
 
     # Search query
     structured_llm = chat_llm.with_structured_output(SearchQuery)
@@ -93,7 +93,7 @@ def generate_answer(state: InterviewState):
     context = state["context"]
 
     # Get LLM
-    chat_llm = get_chat_llm()
+    chat_llm = get_mistral_llm()
 
     # Answer question
     system_message = ANSWER_INSTRUCTIONS.format(goals=analyst.persona, context=context)
@@ -150,7 +150,7 @@ def write_section(state: InterviewState):
     analyst = state["analyst"]
 
     # Get LLM
-    chat_llm = get_chat_llm()
+    chat_llm = get_mistral_llm()
 
     # Write section using either the gathered source docs from interview (context) or the interview itself (interview)
     system_message = SECTION_WRITER_INSTRUCTIONS.format(focus=analyst.description)

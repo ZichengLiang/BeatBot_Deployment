@@ -1,6 +1,6 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 
-from .config import get_chat_llm, ANALYST_INSTRUCTIONS
+from .config import get_mistral_llm, ANALYST_INSTRUCTIONS
 from .models import GenerateAnalystsState, Perspectives
 from langgraph.graph import START, END, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
@@ -13,7 +13,7 @@ def create_analysts(state: GenerateAnalystsState):
     human_analyst_feedback = state.get('human_analyst_feedback', '')
 
     # Get LLM
-    chat_llm = get_chat_llm()
+    chat_llm = get_mistral_llm()
 
     # Enforce structured output
     structured_llm = chat_llm.with_structured_output(Perspectives)

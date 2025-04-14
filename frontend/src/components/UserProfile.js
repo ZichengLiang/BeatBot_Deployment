@@ -74,7 +74,7 @@ const UserProfile = () => {
           isDarkMode ? "hover:bg-gray-800 text-gray-300" : "hover:bg-gray-100 text-gray-700"
         )}
       >
-        <span> | 🎶 Sign out 🎵 :|</span>
+        <span> | 🎶 Sign out 🎵 ||</span>
       </button>
     </div>
   );
