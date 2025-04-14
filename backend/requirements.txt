@@ -73,6 +73,7 @@ ollama
 openai
 orjson==3.10.16
 packaging==24.2
+pandas
 parso==0.8.4
 pexpect==4.9.0
 pillow==11.1.0
