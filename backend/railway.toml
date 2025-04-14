@@ -7,4 +7,7 @@ startCommand = "python app.py"
 healthcheckPath = "/"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 10 
+restartPolicyMaxRetries = 10
+
+[start]
+cmd = "python app.py" 
