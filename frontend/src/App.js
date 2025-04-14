@@ -16,7 +16,6 @@ import About from './pages/About';
 import MainLayout from './components/MainLayout';
 import CreativeMuseSection from './components/CreativeMuseSection';
 import NotationSection from './components/NotationSection';
-import MusicPlayerSection from './components/MusicPlayerSection';
 import WorkflowVisualizer from './components/WorkflowVisualizer';
 
 // Services
@@ -306,14 +305,6 @@ function Composer() {
       <WorkflowVisualizer 
         currentState={workflowState} 
         isGreenMode={isGreenMode}
-      />
-      
-      {/* Bottom Player */}
-      <MusicPlayerSection 
-        // Decide what the player should play based on mode?
-        // For now, it primarily visualizes direct MIDI or audio URL
-        midiData={midiData} // Pass MIDI data primarily for Green Mode
-        trackName={trackName}
       />
     </div>
   );

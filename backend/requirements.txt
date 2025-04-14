@@ -107,6 +107,7 @@ sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
 stack-data==0.6.3
+tavily-python
 tenacity==9.1.2
 thread==2.0.5
 tiktoken==0.9.0
