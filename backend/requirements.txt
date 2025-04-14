@@ -13,6 +13,7 @@ cffi==1.17.1
 chardet==5.2.0
 charset-normalizer==3.4.1
 click==8.1.8
+codecarbon
 colorama==0.4.6
 comm==0.2.2
 configparser==7.1.0
