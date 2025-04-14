@@ -20,9 +20,18 @@ def generate_question(state: InterviewState):
     # Get llm
     llm = get_mistral_llm()
 
+    # Ensure the last message is from a user (not an assistant)
+    # This is needed because Mistral API requires the last message to be from a user or tool
+    filtered_messages = []
+    for msg in messages:
+        if isinstance(msg, AIMessage) and msg == messages[-1]:
+            # Skip if the last message is from an assistant
+            continue
+        filtered_messages.append(msg)
+
     # Generate question
     system_message = QUESTION_INSTRUCTIONS.format(goals=analyst.persona)
-    question = llm.invoke([SystemMessage(content=system_message)] + messages)
+    question = llm.invoke([SystemMessage(content=system_message)] + filtered_messages)
 
     # Write messages to state
     return {"messages": [question]}
@@ -123,9 +132,18 @@ def generate_answer(state: InterviewState):
     # Get LLM
     chat_llm = get_mistral_llm()
 
+    # Ensure the last message is from a user (not an assistant)
+    # This is needed because Mistral API requires the last message to be from a user or tool
+    filtered_messages = []
+    for msg in messages:
+        if isinstance(msg, AIMessage) and msg == messages[-1]:
+            # Skip if the last message is from an assistant
+            continue
+        filtered_messages.append(msg)
+
     # Answer question
     system_message = ANSWER_INSTRUCTIONS.format(goals=analyst.persona, context=context)
-    answer = chat_llm.invoke([SystemMessage(content=system_message)] + messages)
+    answer = chat_llm.invoke([SystemMessage(content=system_message)] + filtered_messages)
 
     # Name the message as coming from the expert
     answer.name = "expert"
@@ -182,8 +200,13 @@ def write_section(state: InterviewState):
 
     # Write section using either the gathered source docs from interview (context) or the interview itself (interview)
     system_message = SECTION_WRITER_INSTRUCTIONS.format(focus=analyst.description)
-    section = chat_llm.invoke([SystemMessage(content=system_message)] + [
-        HumanMessage(content=f"Use this source to write your section: {interview}")])
+    
+    # No need to filter in this case since we're only passing a single HumanMessage
+    # and the Mistral API is fine with that (the last message will be a user message)
+    section = chat_llm.invoke([
+        SystemMessage(content=system_message),
+        HumanMessage(content=f"Use this source to write your section: {interview}")
+    ])
 
     # Append it to state
     return {"sections": [section.content]}
